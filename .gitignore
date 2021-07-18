@@ -134,3 +134,8 @@ dmypy.json
 *.god
 cloud_credentials.json
 cloud_secret.json
+
+
+docker-compose.yml
+.DS_Store # Mac only
+migrations

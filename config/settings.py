@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'dj_rest_auth.registration', # new
     'drf_yasg2', # new
     'corsheaders',  # new
+    'debug_toolbar', # new
 
     # Local
     'books.apps.BooksConfig',
@@ -61,6 +62,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # new
 SITE_ID = 1 # new
 
 MIDDLEWARE = [
+    'django.middleware.cache.UpdateCacheMiddleware', # new
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',  # new
@@ -69,7 +71,26 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware', # new
 ]
+
+import os
+# HTTP Strict Transport Security (HSTS)
+SECURE_SSL_REDIRECT = bool(os.getenv("DJANGO_SECURE_SSL_REDIRECT", default=True))
+SECURE_HSTS_SECONDS = int(os.getenv("DJANGO_SECURE_HSTS_SECONDS", default=2592000))
+SECURE_HSTS_INCLUDE_SUBDOMAINS = bool(os.getenv("DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS",default=True))
+SECURE_HSTS_PRELOAD = bool(os.getenv("DJANGO_SECURE_HSTS_PRELOAD", default=True))
+
+# Secure cookies
+
+SESSION_COOKIE_SECURE = bool(os.getenv("DJANGO_SESSION_COOKIE_SECURE", default=True))
+CSRF_COOKIE_SECURE = bool(os.getenv("DJANGO_CSRF_COOKIE_SECURE", default=True))
+
+CACHE_MIDDLEWARE_ALIAS = 'default'
+CACHE_MIDDLEWARE_SECONDS = 604800
+CACHE_MIDDLEWARE_KEY_PREFIX = ''
+
 
 ROOT_URLCONF = 'config.urls'
 
@@ -108,7 +129,7 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': 'db',
+        'HOST': '127.0.0.1',
         'PORT': 5432
     }
 }
